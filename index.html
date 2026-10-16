@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lucky Playlist Maker</title>
+  <meta name="description" content="Lucky Playlist Maker is a free, in-development playlist maker. Describe a scene or a feeling and get music that fits, sequenced by key and tempo so every transition flows.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0714;
+      --bg-glow-1: rgba(120, 72, 200, 0.28);
+      --bg-glow-2: rgba(255, 140, 90, 0.10);
+      --surface: #151026;
+      --surface-edge: rgba(201, 167, 255, 0.16);
+      --ink: #efe9fa;
+      --muted: #b3a8cc;
+      --lilac: #c9a7ff;
+      --lilac-soft: rgba(201, 167, 255, 0.35);
+      --ember: #ff9a5c;
+      --focus: #ffd1a8;
+      --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+      --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #0b0714;
+        --ink: #efe9fa;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #0b0714;
+      --ink: #efe9fa;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(ellipse 80% 50% at 50% -10%, var(--bg-glow-1), transparent 70%),
+        radial-gradient(ellipse 60% 40% at 90% 110%, var(--bg-glow-2), transparent 70%);
+      background-attachment: fixed;
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 40rem;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    a {
+      color: var(--lilac);
+      text-decoration: underline;
+      text-decoration-color: var(--lilac-soft);
+      text-underline-offset: 3px;
+      overflow-wrap: anywhere;
+    }
+    a:hover { text-decoration-color: var(--lilac); }
+    a:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 72px 0 48px;
+      text-align: center;
+    }
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ember);
+      margin: 0 0 16px;
+      text-shadow: 0 0 12px rgba(255, 154, 92, 0.45);
+    }
+    h1 {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: clamp(2.4rem, 9vw, 3.6rem);
+      line-height: 1.05;
+      margin: 0 0 20px;
+      color: var(--ink);
+      text-shadow:
+        0 0 18px rgba(201, 167, 255, 0.55),
+        0 0 48px rgba(201, 167, 255, 0.25);
+      overflow-wrap: anywhere;
+    }
+    .pitch {
+      font-size: 1.15rem;
+      color: var(--muted);
+      margin: 0 auto;
+      max-width: 30rem;
+    }
+
+    /* Sections */
+    section {
+      padding: 40px 0;
+      border-top: 1px solid var(--surface-edge);
+    }
+    h2 {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1.6rem;
+      margin: 0 0 16px;
+      color: var(--lilac);
+      text-shadow: 0 0 14px rgba(201, 167, 255, 0.35);
+    }
+    p { margin: 0 0 16px; }
+
+    .example {
+      margin: 0 0 24px;
+      padding: 18px 20px;
+      background: var(--surface);
+      border: 1px solid var(--surface-edge);
+      border-left: 3px solid var(--ember);
+      border-radius: 10px;
+      box-shadow: 0 0 32px rgba(120, 72, 200, 0.15);
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--ink);
+    }
+    .example span {
+      display: block;
+      margin-top: 8px;
+      font-family: var(--font-body);
+      font-style: normal;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    ol.steps {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      counter-reset: step;
+      display: grid;
+      gap: 14px;
+    }
+    ol.steps li {
+      counter-increment: step;
+      position: relative;
+      padding: 16px 16px 16px 60px;
+      background: var(--surface);
+      border: 1px solid var(--surface-edge);
+      border-radius: 10px;
+    }
+    ol.steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 16px;
+      top: 14px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--bg);
+      background: var(--lilac);
+      box-shadow: 0 0 16px rgba(201, 167, 255, 0.6);
+    }
+    ol.steps strong {
+      display: block;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+    ol.steps span {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* Status */
+    .status {
+      padding: 20px;
+      border-radius: 12px;
+      background: linear-gradient(160deg, rgba(255, 154, 92, 0.12), rgba(201, 167, 255, 0.06));
+      border: 1px solid rgba(255, 154, 92, 0.35);
+      box-shadow: 0 0 36px rgba(255, 154, 92, 0.12);
+    }
+    .status strong {
+      color: var(--ember);
+      text-shadow: 0 0 10px rgba(255, 154, 92, 0.4);
+    }
+    .status p { margin: 6px 0 0; color: var(--muted); }
+
+    /* Footer */
+    footer {
+      padding: 32px 0 48px;
+      border-top: 1px solid var(--surface-edge);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    footer p { margin: 0 0 10px; }
+    footer a { color: var(--lilac); }
+
+    @media (min-width: 640px) {
+      .hero { padding: 96px 0 56px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <p class="eyebrow">A free project in progress</p>
+      <h1>Lucky Playlist Maker</h1>
+      <p class="pitch">Describe a scene or a feeling, and get music that fits it, sequenced so every transition flows.</p>
+    </header>
+
+    <section id="how-it-works" aria-labelledby="how-heading">
+      <h2 id="how-heading">How it works</h2>
+      <p>Start with a picture, not a genre. Say where you are, what the weather is doing, and what is watching you.</p>
+      <blockquote class="example">
+        "walking home from school in mid-October while ghosts watch from windows and behind garden fences"
+        <span>An example scene description</span>
+      </blockquote>
+      <ol class="steps">
+        <li>
+          <strong>Describe a scene</strong>
+          <span>Write it the way you would tell a friend. Words about place, time, weather and mood all count.</span>
+        </li>
+        <li>
+          <strong>Matched by feeling</strong>
+          <span>The scene is read for its emotional shape, and tracks that carry that feeling are pulled in.</span>
+        </li>
+        <li>
+          <strong>Sequenced by key and tempo</strong>
+          <span>Tracks are ordered on the Camelot wheel and by BPM, so each transition moves smoothly into the next. Pairs that sit well together are tracked as seams.</span>
+        </li>
+      </ol>
+    </section>
+
+    <section id="status" aria-labelledby="status-heading">
+      <h2 id="status-heading">Status</h2>
+      <div class="status">
+        <strong>Status: in development</strong>
+        <p>Lucky Playlist Maker is still being built. The description on this page is the plan, and features may change as the project takes shape. It is and will stay free.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>Tempo and key data provided by <a href="https://getsongbpm.com">GetSongBPM</a>.</p>
+      <p>Built by GigiHackwench. Source and updates on <a href="https://github.com/GigiHackwench">the GitHub profile</a>.</p>
+    </div>
+  </footer>
+</body>
+</html>
